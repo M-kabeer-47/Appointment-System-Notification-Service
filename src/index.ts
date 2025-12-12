@@ -75,8 +75,15 @@ app.get("/health", (_req, res) => {
 // Routes
 app.use("/api/notifications", notificationRoutes);
 
-// Start server and set up event listeners
-httpServer.listen(config.port, async () => {
-  console.log(`🚀 Notification Service running on port ${config.port}`);
-  await setupEventListeners(io);
-});
+// Set up event listeners
+setupEventListeners(io);
+
+// Start server (for local development)
+if (process.env.NODE_ENV !== "production") {
+  httpServer.listen(config.port, () => {
+    console.log(`🚀 Notification Service running on port ${config.port}`);
+  });
+}
+
+// Export for Vercel serverless deployment
+export default httpServer;
